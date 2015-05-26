@@ -122,7 +122,21 @@ internal final class ToJSON {
             objectArray(field, key: key, dictionary: &dictionary)
         }
     }
-    
+	
+	class func objectArray<N: Mappable>(field: Array<Array<N>>, key: String, inout dictionary: [String : AnyObject]) {
+		let JSONObjects = Mapper().toJSONArray(field)
+		
+		if !JSONObjects.isEmpty {
+			setValue(JSONObjects, forKey: key, dictionary: &dictionary)
+		}
+	}
+	
+	class func optionalObjectArray<N: Mappable>(field: Array<Array<N>>?, key: String, inout dictionary: [String : AnyObject]) {
+		if let field = field {
+			objectArray(field, key: key, dictionary: &dictionary)
+		}
+	}
+	
 	class func objectDictionary<N: Mappable>(field: Dictionary<String, N>, key: String, inout dictionary: [String : AnyObject]) {
 		let JSONObjects = Mapper().toJSONDictionary(field)
 

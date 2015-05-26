@@ -189,6 +189,19 @@ public final class Mapper<N: Mappable> {
 
 		return []
 	}
+	
+	public func mapArrayOfArrays(JSON: AnyObject?) -> [[N]]? {
+		if let JSONArray = JSON as? [[[String : AnyObject]]] {
+			var objectArray = [[N]]()
+			
+			for innerJSONArray in JSONArray {
+				objectArray.append(mapArray(innerJSONArray))
+			}
+			return objectArray
+		}
+		
+		return nil
+	}
 
 	/// Maps a JSON object to an array of Mappable objects if it is an array of JSON dictionary, or returns nil.
 	public func mapArray(JSON: AnyObject?) -> [N]? {
@@ -249,6 +262,16 @@ public final class Mapper<N: Mappable> {
 		return array.map {
 			// convert every element in array to JSON dictionary equivalent
 			self.toJSON($0)
+		}
+	}
+	
+	///Maps an array of Objects to an array of JSON dictionaries [[String : AnyObject]]
+	public func toJSONArray(array: [[N]]) -> [[[String : AnyObject]]] {
+		return array.map {
+			$0.map {
+				// convert every element in array to JSON dictionary equivalent
+				self.toJSON($0)
+			}
 		}
 	}
 
